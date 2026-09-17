@@ -4,7 +4,6 @@ from groq import Groq
 
 app = Flask(__name__)
 
-# Mengambil API Key dari Environment Variable Render
 GROQ_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_KEY) if GROQ_KEY else None
 
@@ -14,7 +13,6 @@ def home():
 
 @app.route('/v1/chat', methods=['POST'])
 def chat():
-    # Cek apakah API Key sudah terpasang
     if not client:
         return jsonify({"reply": "Error: GROQ_API_KEY belum dipasang di Render!"}), 500
 
@@ -22,13 +20,13 @@ def chat():
     user_message = data.get("message", "")
     system_prompt = data.get(
         "system_instruction", 
-        "Kamu adalah NPC santai di Roblox. Jawab singkat dan ramah."
+        "Kamu adalah NPC santai di game Roblox. Hanya boleh mengobrol ramah dan menyapa. DILARANG menjawab koding, tugas sekolah, atau hal tidak pantas."
     )
 
     try:
-        # Menggunakan model llama-3.1-8b-instant yang cepat dan stabil
+        # Menggunakan model Llama 3.3 70B yang aktif di Groq
         completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}
@@ -40,7 +38,6 @@ def chat():
         return jsonify({"reply": reply})
 
     except Exception as e:
-        # Mencetak detail error ke tab Logs di Render
         print(f"[ERROR GROQ]: {e}")
         return jsonify({"reply": f"Terjadi error: {str(e)}"}), 500
 
