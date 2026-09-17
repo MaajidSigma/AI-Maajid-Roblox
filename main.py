@@ -24,12 +24,10 @@ def chat():
     game_context = data.get("game_context", "")
     history = data.get("history", [])
 
-    # Gabungkan instruksi dengan situasi waktu di game
     full_system_prompt = f"{system_prompt}\n\n[SITUASI GAME SAAT INI]:\n{game_context}"
 
     messages_payload = [{"role": "system", "content": full_system_prompt}]
     
-    # Masukkan 6 ingatan obrolan terakhir
     for msg in history[-6:]:
         messages_payload.append(msg)
         
@@ -51,7 +49,7 @@ def chat():
                     model=model_name,
                     messages=messages_payload,
                     temperature=0.7,
-                    max_tokens=150
+                    max_tokens=150 # Tetap 150 (tidak dibatasi)
                 )
                 reply = completion.choices[0].message.content
                 return jsonify({"reply": reply})
