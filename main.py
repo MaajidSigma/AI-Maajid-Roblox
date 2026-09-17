@@ -4,7 +4,6 @@ from groq import Groq
 
 app = Flask(__name__)
 
-# Membaca API Key dari Environment Variables di Render
 GROQ_KEY = os.environ.get("GROQ_API_KEY")
 client = Groq(api_key=GROQ_KEY) if GROQ_KEY else None
 
@@ -25,9 +24,9 @@ def chat():
     )
 
     try:
-        # Menggunakan model llama3-8b-8192 yang stabil & aktif di semua akun Groq
+        # Menggunakan model llama-3.1-8b-instant pengganti model lama
         completion = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}
